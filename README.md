@@ -1,5 +1,4 @@
-## sia_exporter, a lightweight and flexible exporter to send Sia metrics to
-Prometheus
+## sia_exporter, a lightweight and flexible exporter to send Sia metrics to Prometheus
 Introducing sia_exporter a lightweight and flexible metrics exporter to send Sia
 metrics to Prometheus for analysis and Grafana for graphing and alerting.
 Sia_exporter makes it easy to monitor one or many Sia instances using
