@@ -144,6 +144,10 @@ var (
 		Name: "host_max_collateral", Help: "Max collateral per contract"})
 	hostContractCount = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "host_contract_count", Help: "number of host contracts"})
+	hostTotalStorage = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "host_total_storage", Help: "total amount of storage available on the host in bytes"})
+	hostRemainingStorage = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "host_remaining_storage", Help: "amount of storage remaining on the host in bytes"})
 )
 
 const (
@@ -165,7 +169,7 @@ func hostMetrics(sc *sia.Client) {
 		log.Info("Could not fetch storage info")
 	}
 
-	//	es := hg.ExternalSettings
+	es := hg.ExternalSettings
 	fm := hg.FinancialMetrics
 	is := hg.InternalSettings
 	//	nm := hg.NetworkMetrics
@@ -191,6 +195,8 @@ func hostMetrics(sc *sia.Client) {
 
 	// Host Internal Settings
 	hostAcceptingContracts.Set(boolToFloat64(is.AcceptingContracts))
+	hostTotalStorage.Set(float64(es.TotalStorage))
+	hostRemainingStorage.Set(float64(es.RemainingStorage))
 	hostMaxDuration.Set(float64(is.MaxDuration))
 	hostMaxDownloadBatchSize.Set(float64(is.MaxDownloadBatchSize))
 	hostMaxReviseBatchSize.Set(float64(is.MaxReviseBatchSize))
