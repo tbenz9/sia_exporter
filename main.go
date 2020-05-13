@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -24,23 +23,20 @@ var (
 
 //initSiaClient sets the values of the client so we can communicate with the
 //Sia Daemon.
-func findPassword() string {
+func findPassword() (string, error) {
 	// Check environment variables
 	apiPassword := os.Getenv("SIA_API_PASSWORD")
 	if apiPassword != "" {
 		log.Info("Using SIA_API_PASSWORD environment variable")
-		return apiPassword
+		return apiPassword, nil
 	}
 
-	// Check .apipassword file
-	var siaDir = build.DefaultSiaDir()
-	pw, err := ioutil.ReadFile(build.APIPasswordFile(siaDir))
+	// No password passed in, fetch the API Password
+	pw, err := build.APIPassword()
 	if err != nil {
-		log.Info("Could not read API password file:", err)
-		return ""
-	} else {
-		return strings.TrimSpace(string(pw))
+		log.Fatal("Exiting: Error getting API Password:", err)
 	}
+	return pw, err
 }
 
 // initLogger initializes the logger
@@ -133,9 +129,9 @@ func main() {
 	initLogger(debug)
 
 	// Set the Sia Client connection information
-	sc := sia.New(*address)
+	sc := sia.New(sia.Options{Address: *address})
 	sc.UserAgent = *agent
-	sc.Password = findPassword()
+	sc.Password, _ = findPassword()
 
 	// Set the metrics initially before starting the monitor and HTTP server
 	// If you don't do this all the metrics start with a "0" until they are set

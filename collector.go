@@ -215,7 +215,7 @@ func hostMetrics(sc *sia.Client) {
 func renterMetrics(sc *sia.Client) {
 
 	// Renter Get Dir Metrics
-	rg, err := sc.RenterGetDir(modules.RootSiaPath())
+	rg, err := sc.RenterDirGet(modules.RootSiaPath())
 	if errors.Contains(err, ErrAPICallNotRecognized) {
 		log.Info("Renter module is not loaded")
 		renterModuleLoaded.Set(boolToFloat64(false))
