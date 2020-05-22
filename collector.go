@@ -26,8 +26,12 @@ var (
 		Name: "renter_aggregate_size", Help: "The aggregate size of data stored on Sia"})
 	renterMaxHealth = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "renter_max_health", Help: "The max health"})
+	renterMaxHealthAggregatedPercentage = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "renter_max_health_aggregated_percentage", Help: "The max health aggregated in percentage"})
 	renterMinRedundancy = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "renter_min_redundancy", Help: "The min redundancy"})
+	renterMinRedundancyAggregated = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "renter_min_redundancy_aggregated", Help: "The min redundancy aggregated"})
 	renterRateLimitDownload = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "renter_rate_limit_download", Help: "renter download ratelimit (bytes-per-second)"})
 	renterRateLimitUpload = promauto.NewGauge(prometheus.GaugeOpts{
@@ -230,7 +234,9 @@ func renterMetrics(sc *sia.Client) {
 	renterAggregateNumStuckChunks.Set(float64(rg.Directories[0].AggregateNumStuckChunks))
 	renterAggregateSize.Set(float64(rg.Directories[0].AggregateSize))
 	renterMaxHealth.Set(float64(rg.Directories[0].MaxHealth))
+	renterMaxHealthAggregatedPercentage.Set(float64(rg.Directories[0].AggregateMaxHealthPercentage))
 	renterMinRedundancy.Set(float64(rg.Directories[0].MinRedundancy))
+	renterMinRedundancyAggregated.Set(float64(rg.Directories[0].AggregateMinRedundancy))
 
 	// Contract Metrics
 	rc, err := sc.RenterDisabledContractsGet()
