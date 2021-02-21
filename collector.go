@@ -84,6 +84,8 @@ var (
 		Name: "consensus_height", Help: "Consensus block height"})
 	consensusDifficulty = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "consensus_difficulty", Help: "Consensus difficulty"})
+	consensusHshrt = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "consensus_hashrate", Help: "Consensus hashrate"})
 
 	// Daemon Metrics
 	//	daemonAggregateNumAlerts = promauto.NewGauge(prometheus.GaugeOpts{
@@ -309,6 +311,7 @@ func consensusMetrics(sc *sia.Client) {
 	consensusHeight.Set(float64(cs.Height))
 	Difficulty, _ := cs.Difficulty.Float64()
 	consensusDifficulty.Set(Difficulty)
+	consensusHshrt.Set(Difficulty/600.0)
 }
 
 // daemonMetrics retrieves and sets the Prometheus metrics related to the
